@@ -1,6 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "./tailwind.config.js";
+
+/* Custom theme for Arya Hospital Portal */
+@theme {
+  --color-arya-50: #f0f9ff;
+  --color-arya-100: #e0f2fe;
+  --color-arya-200: #bae6fd;
+  --color-arya-300: #7dd3fc;
+  --color-arya-400: #38bdf8;
+  --color-arya-500: #0ea5e9;
+  --color-arya-600: #0284c7;
+  --color-arya-700: #0369a1;
+  --color-arya-800: #075985;
+  --color-arya-900: #0c4a6e;
+}
 
 /* Custom styles for Arya Hospital Portal */
 @layer base {
