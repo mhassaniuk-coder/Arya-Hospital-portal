@@ -17,6 +17,7 @@ import { FamilyPage } from './components/FamilyPage';
 import { SymptomChecker } from './components/SymptomChecker';
 import { AuthPage } from './components/AuthPage';
 import { VerificationModal } from './components/VerificationModal';
+import { ErrorBoundary } from './components/shared';
 import { ViewState, User, Appointment, LabResult, Medication, Bill } from './types';
 
 // Mock Data
@@ -238,7 +239,9 @@ function App() {
 
         <main className="flex-1 overflow-hidden relative w-full">
            <div className="h-full w-full max-w-7xl mx-auto md:px-8">
-              {renderContent()}
+              <ErrorBoundary>
+                {renderContent()}
+              </ErrorBoundary>
            </div>
         </main>
 

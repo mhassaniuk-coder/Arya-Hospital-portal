@@ -1,11 +1,11 @@
 import { GoogleGenAI, LiveServerMessage, Modality } from "@google/genai";
 import { ChatMessage, AIAnalysisResult, User, Appointment, LabResult, Medication, Bill } from '../types';
 
-const API_KEY = process.env.API_KEY || '';
+const API_KEY = import.meta.env?.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' ? process.env?.API_KEY : '') || '';
 
 class GeminiService {
   private ai: GoogleGenAI;
-  private modelId = 'gemini-3-flash-preview';
+  private modelId = 'gemini-2.0-flash-exp';
 
   // Live API State
   private inputAudioContext: AudioContext | null = null;
@@ -16,7 +16,13 @@ class GeminiService {
   private sessionPromise: Promise<any> | null = null;
 
   constructor() {
-    this.ai = new GoogleGenAI({ apiKey: API_KEY });
+    try {
+      this.ai = new GoogleGenAI({ apiKey: API_KEY });
+    } catch (error) {
+      console.error("Gemini Service Initialization Error:", error);
+      // Fallback initialization to prevent app crash
+      this.ai = new GoogleGenAI({ apiKey: 'dummy_key' });
+    }
   }
 
   // --- EXISTING TEXT CHAT ---
