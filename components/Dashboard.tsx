@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Activity, Calendar, FileText, Droplet, Thermometer, ArrowUpRight, 
   ShieldAlert, ShieldCheck, ChevronRight, Lock, QrCode, Scan, 
@@ -7,6 +8,8 @@ import {
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Appointment, LabResult, User } from '../types';
 import { geminiService } from '../services/geminiService';
+import { fadeInUp, staggerContainer, scaleIn, slideInFromBottom } from '../utils/animations';
+import { GradientBackground, ParticlesBackground, LoadingDots, AnimatedButton, AnimatedCard } from './ui';
 
 interface DashboardProps {
   user: User;
@@ -68,102 +71,188 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, appointments, labRes
   const nextAppointment = appointments.find(a => a.status === 'upcoming');
 
   return (
-    <div className="h-full w-full overflow-y-auto overflow-x-hidden p-4 md:p-0 space-y-6 animate-fade-in pb-24 md:pb-8">
-      
+    <motion.div 
+      className="h-full w-full overflow-y-auto overflow-x-hidden p-4 md:p-0 space-y-6 pb-24 md:pb-8"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
       {/* SOS Modal */}
-      {showSOS && (
-        <div className="fixed inset-0 z-50 bg-red-900/90 backdrop-blur-md flex items-center justify-center p-4">
-             <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl animate-bounce-slow">
-                 {!sosActive ? (
-                     <>
-                        <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 text-red-600 animate-pulse">
-                            <span className="text-4xl font-bold">{sosCountdown}</span>
-                        </div>
-                        <h2 className="text-2xl font-bold text-slate-800 mb-2">Sending Emergency Alert</h2>
-                        <p className="text-slate-500 mb-8">Notifying ambulance and emergency contacts with your live location.</p>
-                        <button onClick={handleCancelSOS} className="w-full py-4 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl transition-colors">Cancel SOS</button>
-                     </>
-                 ) : (
-                     <>
-                        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
-                            <ShieldCheck size={48} />
-                        </div>
-                        <h2 className="text-2xl font-bold text-slate-800 mb-2">Help is on the way!</h2>
-                        <p className="text-slate-500 mb-8">Ambulance dispatched. Contacts notified.</p>
-                        <button onClick={handleCancelSOS} className="w-full py-4 bg-slate-800 text-white font-bold rounded-xl transition-colors">Close</button>
-                     </>
-                 )}
-             </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {showSOS && (
+          <motion.div
+            className="fixed inset-0 z-50 bg-red-900/90 backdrop-blur-md flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl"
+              variants={scaleIn}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {!sosActive ? (
+                <>
+                  <motion.div
+                    className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 text-red-600"
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 0.5, repeat: Infinity }}
+                  >
+                    <span className="text-4xl font-bold">{sosCountdown}</span>
+                  </motion.div>
+                  <h2 className="text-2xl font-bold text-slate-800 mb-2">Sending Emergency Alert</h2>
+                  <p className="text-slate-500 mb-8">Notifying ambulance and emergency contacts with your live location.</p>
+                  <button onClick={handleCancelSOS} className="w-full py-4 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl transition-colors">Cancel SOS</button>
+                </>
+              ) : (
+                <>
+                  <motion.div
+                    className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <ShieldCheck size={48} />
+                  </motion.div>
+                  <h2 className="text-2xl font-bold text-slate-800 mb-2">Help is on the way!</h2>
+                  <p className="text-slate-500 mb-8">Ambulance dispatched. Contacts notified.</p>
+                  <button onClick={handleCancelSOS} className="w-full py-4 bg-slate-800 text-white font-bold rounded-xl transition-colors">Close</button>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Vitals Modal */}
-      {showVitalsModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowVitalsModal(false)}>
-            <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-xl" onClick={e => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold text-slate-800">Log Vitals</h3>
-                    <button onClick={() => setShowVitalsModal(false)} className="p-2 hover:bg-slate-50 rounded-full"><X size={20}/></button>
+      <AnimatePresence>
+        {showVitalsModal && (
+          <motion.div
+            className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowVitalsModal(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-3xl p-6 w-full max-w-md shadow-xl"
+              onClick={e => e.stopPropagation()}
+              variants={scaleIn}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold text-slate-800">Log Vitals</h3>
+                <button onClick={() => setShowVitalsModal(false)} className="p-2 hover:bg-slate-50 rounded-full" title="Close">
+                  <X size={20}/>
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-400 uppercase">Systolic (mmHg)</label>
+                    <input type="number" value={vitals.systolic} onChange={e => setVitals({...vitals, systolic: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-lg font-bold outline-none focus:ring-2 focus:ring-arya-200" placeholder="120" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-400 uppercase">Diastolic (mmHg)</label>
+                    <input type="number" value={vitals.diastolic} onChange={e => setVitals({...vitals, diastolic: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-lg font-bold outline-none focus:ring-2 focus:ring-arya-200" placeholder="80" />
+                  </div>
                 </div>
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                         <div>
-                            <label className="text-xs font-bold text-slate-400 uppercase">Systolic (mmHg)</label>
-                            <input type="number" value={vitals.systolic} onChange={e => setVitals({...vitals, systolic: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-lg font-bold outline-none focus:ring-2 focus:ring-arya-200" />
-                         </div>
-                         <div>
-                            <label className="text-xs font-bold text-slate-400 uppercase">Diastolic (mmHg)</label>
-                            <input type="number" value={vitals.diastolic} onChange={e => setVitals({...vitals, diastolic: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-lg font-bold outline-none focus:ring-2 focus:ring-arya-200" />
-                         </div>
-                    </div>
-                    <div>
-                        <label className="text-xs font-bold text-slate-400 uppercase">Heart Rate (bpm)</label>
-                        <input type="number" value={vitals.heartRate} onChange={e => setVitals({...vitals, heartRate: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-lg font-bold outline-none focus:ring-2 focus:ring-arya-200" />
-                    </div>
-                    <div>
-                        <label className="text-xs font-bold text-slate-400 uppercase">Weight (lbs)</label>
-                        <input type="number" value={vitals.weight} onChange={e => setVitals({...vitals, weight: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-lg font-bold outline-none focus:ring-2 focus:ring-arya-200" />
-                    </div>
-                    <button onClick={() => setShowVitalsModal(false)} className="w-full bg-arya-600 text-white py-3 rounded-xl font-bold hover:bg-arya-700 transition-colors flex items-center justify-center gap-2">
-                        <Save size={18} /> Save Entry
-                    </button>
+                <div>
+                  <label className="text-xs font-bold text-slate-400 uppercase">Heart Rate (bpm)</label>
+                  <input type="number" value={vitals.heartRate} onChange={e => setVitals({...vitals, heartRate: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-lg font-bold outline-none focus:ring-2 focus:ring-arya-200" placeholder="72" />
                 </div>
-            </div>
-        </div>
-      )}
+                <div>
+                  <label className="text-xs font-bold text-slate-400 uppercase">Weight (lbs)</label>
+                  <input type="number" value={vitals.weight} onChange={e => setVitals({...vitals, weight: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-lg font-bold outline-none focus:ring-2 focus:ring-arya-200" placeholder="150" />
+                </div>
+                <button onClick={() => setShowVitalsModal(false)} className="w-full bg-arya-600 text-white py-3 rounded-xl font-bold hover:bg-arya-700 transition-colors flex items-center justify-center gap-2">
+                  <Save size={18} /> Save Entry
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Header Area */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-gradient-to-r from-arya-600 to-arya-800 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden shrink-0">
+      <motion.div
+        className="flex flex-col md:flex-row justify-between items-start md:items-center bg-gradient-to-r from-arya-600 to-arya-800 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden shrink-0"
+        variants={fadeInUp}
+      >
+        {/* Animated background particles */}
+        <ParticlesBackground className="opacity-30" />
+        
         <div className="z-10">
-            <div className="flex items-center gap-3 mb-2">
-               <h1 className="text-2xl md:text-3xl font-bold">Welcome back, {user.name}</h1>
-               {user.isVerified ? (
-                 <span className="bg-green-500/20 text-green-100 border border-green-400/30 text-[10px] font-bold px-2 py-1 rounded-full flex items-center backdrop-blur-sm whitespace-nowrap">
-                   <ShieldCheck size={12} className="mr-1" /> Verified Patient
-                 </span>
-               ) : (
-                 <span className="bg-amber-500/20 text-amber-100 border border-amber-400/30 text-[10px] font-bold px-2 py-1 rounded-full flex items-center backdrop-blur-sm whitespace-nowrap">
-                   <ShieldAlert size={12} className="mr-1" /> Unverified
-                 </span>
-               )}
-            </div>
-            <p className="text-arya-100 opacity-90 max-w-xl text-sm md:text-base leading-relaxed line-clamp-2 md:line-clamp-none">
-                {aiSummary}
-            </p>
-            
-            <div className="flex gap-3 mt-6">
-                <button onClick={() => setShowSOS(true)} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center shadow-lg shadow-red-900/20 transition-transform hover:scale-105">
-                    <Siren size={16} className="mr-2 animate-pulse" /> SOS Emergency
-                </button>
-                <button onClick={() => setShowVitalsModal(true)} className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center backdrop-blur-sm transition-colors">
-                    <HeartPulse size={16} className="mr-2" /> Log Vitals
-                </button>
-            </div>
+          <div className="flex items-center gap-3 mb-2">
+            <motion.h1 
+              className="text-2xl md:text-3xl font-bold"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              Welcome back, {user.name}
+            </motion.h1>
+            {user.isVerified ? (
+              <motion.span
+                className="bg-green-500/20 text-green-100 border border-green-400/30 text-[10px] font-bold px-2 py-1 rounded-full flex items-center backdrop-blur-sm whitespace-nowrap"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <ShieldCheck size={12} className="mr-1" /> Verified Patient
+              </motion.span>
+            ) : (
+              <motion.span
+                className="bg-amber-500/20 text-amber-100 border border-amber-400/30 text-[10px] font-bold px-2 py-1 rounded-full flex items-center backdrop-blur-sm whitespace-nowrap"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <ShieldAlert size={12} className="mr-1" /> Unverified
+              </motion.span>
+            )}
+          </div>
+          <motion.p
+            className="text-arya-100 opacity-90 max-w-xl text-sm md:text-base leading-relaxed line-clamp-2 md:line-clamp-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            {aiSummary === "Analyzing..." ? <LoadingDots /> : aiSummary}
+          </motion.p>
+          
+          <motion.div
+            className="flex gap-3 mt-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <AnimatedButton
+              onClick={() => setShowSOS(true)}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center shadow-lg shadow-red-900/20"
+            >
+              <Siren size={16} className="mr-2 animate-pulse" /> SOS Emergency
+            </AnimatedButton>
+            <AnimatedButton
+              onClick={() => setShowVitalsModal(true)}
+              className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center backdrop-blur-sm"
+            >
+              <HeartPulse size={16} className="mr-2" /> Log Vitals
+            </AnimatedButton>
+          </motion.div>
         </div>
-        <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-x-1/4 translate-y-1/4">
-            <Activity size={300} />
-        </div>
-      </div>
+        <motion.div
+          className="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-x-1/4 translate-y-1/4"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+        >
+          <Activity size={300} />
+        </motion.div>
+      </motion.div>
 
       {/* VERIFIED: Arya Digital ID Card */}
       {user.isVerified && (
@@ -397,6 +486,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, appointments, labRes
             )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

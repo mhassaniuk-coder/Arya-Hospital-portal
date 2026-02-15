@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { 
   LayoutDashboard, MessageSquare, Calendar, FileText, Menu, X, Bell, Settings, LogOut, 
   ShieldCheck, ShieldAlert, Lock, History, Pill, Heart, CreditCard, Users, Activity
 } from 'lucide-react';
 import { Dashboard } from './components/Dashboard';
 import { AIChat } from './components/AIChat';
-import { Appointments } from './components/Appointments';
+import { Appointments } from './components/appointments';
 import { MedicalRecords } from './components/MedicalRecords';
 import { HistoryPage } from './components/HistoryPage';
 import { NotificationsPage } from './components/NotificationsPage';
@@ -16,67 +17,22 @@ import { InsurancePage } from './components/InsurancePage';
 import { FamilyPage } from './components/FamilyPage';
 import { SymptomChecker } from './components/SymptomChecker';
 import { AuthPage } from './components/AuthPage';
+import { LandingPage } from './components/LandingPage';
 import { VerificationModal } from './components/VerificationModal';
 import { ErrorBoundary } from './components/shared';
-import { ViewState, User, Appointment, LabResult, Medication, Bill } from './types';
+import { ViewState, User, Appointment } from './types';
+import { 
+  MOCK_USER, 
+  INITIAL_APPOINTMENTS, 
+  MOCK_LAB_RESULTS, 
+  MOCK_MEDICATIONS, 
+  MOCK_BILLS 
+} from './data/mock';
 
-// Mock Data
-const MOCK_USER: User = {
-  id: 'u1',
-  name: 'Sarah Jenkins',
-  avatarUrl: 'https://picsum.photos/200',
-  mrn: 'MRN-882910',
-  isVerified: false 
-};
-
-const INITIAL_APPOINTMENTS: Appointment[] = [
-  {
-    id: 'a1',
-    doctorName: 'Dr. Emily Chen',
-    specialty: 'Cardiology',
-    date: '2023-11-15T10:00:00',
-    time: '10:00 AM',
-    status: 'upcoming',
-    location: 'Building A, Room 302',
-    symptoms: 'Chest flutter',
-    aiSummary: 'Routine follow-up for arrhythmia. Vitals stable.',
-    matchScore: 98,
-    travelTime: '25 mins',
-    prepInstructions: ['Fast for 12 hours', 'Bring medication list'],
-    smartTags: ['High Priority', 'Heart Health'],
-    visitType: 'in-person'
-  },
-  {
-    id: 'a2',
-    doctorName: 'Dr. James Wilson',
-    specialty: 'Dermatology',
-    date: '2023-10-20T14:30:00',
-    time: '2:30 PM',
-    status: 'completed',
-    location: 'Building B, Room 105',
-    symptoms: 'Rash on arm',
-    aiSummary: 'Diagnosed with contact dermatitis. Prescribed cream.',
-    matchScore: 92,
-    visitType: 'in-person'
-  }
-];
-
-const MOCK_LAB_RESULTS: LabResult[] = [
-  { id: 'l1', testName: 'Complete Blood Count', date: '2023-10-21', status: 'normal', value: 'Normal', unit: '' },
-  { id: 'l2', testName: 'Lipid Panel', date: '2023-10-21', status: 'abnormal', value: '240', unit: 'mg/dL' },
-];
-
-const MOCK_MEDICATIONS: Medication[] = [
-  { id: 'm1', name: 'Lipitor', dosage: '20mg', frequency: 'Daily', refillsRemaining: 2, prescribedBy: 'Dr. Chen', status: 'active', nextRefill: '2023-11-01' },
-  { id: 'm2', name: 'Lisinopril', dosage: '10mg', frequency: 'Daily', refillsRemaining: 0, prescribedBy: 'Dr. Chen', status: 'completed' },
-];
-
-const MOCK_BILLS: Bill[] = [
-  { id: 'b1', amount: 45.00, description: 'Lab Work Co-pay', date: '2023-10-21', status: 'unpaid' },
-];
+type AppScreen = 'landing' | 'auth' | 'app';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [screen, setScreen] = useState<AppScreen>('landing');
   const [currentUser, setCurrentUser] = useState<User>(MOCK_USER);
   const [currentView, setCurrentView] = useState<ViewState>('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -88,7 +44,7 @@ function App() {
   };
 
   const handleLogin = () => {
-    setIsAuthenticated(true);
+    setScreen('app');
   };
 
   const handleVerificationComplete = () => {
@@ -96,7 +52,18 @@ function App() {
     setShowVerificationModal(false);
   };
 
-  if (!isAuthenticated) {
+  // Landing Page
+  if (screen === 'landing') {
+    return (
+      <LandingPage 
+        onGetStarted={() => setScreen('auth')} 
+        onSignIn={() => setScreen('auth')} 
+      />
+    );
+  }
+
+  // Auth Page
+  if (screen === 'auth') {
     return <AuthPage onLogin={handleLogin} />;
   }
 
@@ -139,7 +106,7 @@ function App() {
       case 'records': return <MedicalRecords labResults={MOCK_LAB_RESULTS} />;
       case 'history': return <HistoryPage appointments={appointments} labResults={MOCK_LAB_RESULTS} medications={MOCK_MEDICATIONS} />;
       case 'notifications': return <NotificationsPage onNavigate={(view) => setCurrentView(view)} />;
-      case 'settings': return <SettingsPage user={currentUser} onSignOut={() => setIsAuthenticated(false)} />;
+      case 'settings': return <SettingsPage user={currentUser} onSignOut={() => setScreen('landing')} />;
       case 'pharmacy': return <PharmacyPage medications={MOCK_MEDICATIONS} />;
       case 'wellness': return <WellnessPage />;
       case 'insurance': return <InsurancePage />;
@@ -200,10 +167,10 @@ function App() {
                <div className="bg-arya-600 p-1.5 rounded-lg"><LayoutDashboard className="text-white" size={20} /></div>
                <span className="font-bold text-lg text-slate-800">Arya</span>
            </div>
-           <div className="flex items-center gap-3">
-               <button onClick={() => setCurrentView('notifications')} className="p-2 relative text-slate-600"><Bell size={24} /><span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span></button>
-               <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-slate-600">{isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}</button>
-           </div>
+            <div className="flex items-center gap-3">
+                <button onClick={() => setCurrentView('notifications')} title="Notifications" className="p-2 relative text-slate-600"><Bell size={24} /><span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span></button>
+                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} title="Menu" className="p-2 text-slate-600">{isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}</button>
+            </div>
         </div>
 
         {isMobileMenuOpen && (
@@ -221,7 +188,7 @@ function App() {
                       <NavItem view="insurance" icon={CreditCard} label="Insurance" />
                       <NavItem view="settings" icon={Settings} label="Settings" />
                   </nav>
-                  <button onClick={() => setIsAuthenticated(false)} className="flex items-center space-x-2 text-sm text-red-500 font-bold w-full p-2 hover:bg-red-50 rounded-lg"><LogOut size={16} /><span>Sign Out</span></button>
+                  <button onClick={() => setScreen('landing')} className="flex items-center space-x-2 text-sm text-red-500 font-bold w-full p-2 hover:bg-red-50 rounded-lg"><LogOut size={16} /><span>Sign Out</span></button>
               </div>
           </div>
         )}
@@ -232,8 +199,8 @@ function App() {
                 <p className="text-slate-400 text-sm">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </div>
             <div className="flex items-center space-x-4">
-                <button onClick={() => setCurrentView('notifications')} className="p-2 relative rounded-full hover:bg-slate-100 transition-colors"><Bell size={20} className="text-slate-500"/><span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span></button>
-                <button onClick={() => setCurrentView('settings')} className="p-2 rounded-full hover:bg-slate-100 transition-colors"><Settings size={20} className="text-slate-500"/></button>
+                <button onClick={() => setCurrentView('notifications')} title="Notifications" className="p-2 relative rounded-full hover:bg-slate-100 transition-colors"><Bell size={20} className="text-slate-500"/><span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span></button>
+                <button onClick={() => setCurrentView('settings')} title="Settings" className="p-2 rounded-full hover:bg-slate-100 transition-colors"><Settings size={20} className="text-slate-500"/></button>
             </div>
         </header>
 

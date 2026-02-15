@@ -19,7 +19,7 @@ import {
 // Sub-components
 import { AppointmentCard } from './AppointmentCard';
 import { VideoCallOverlay } from './VideoCallOverlay';
-import { ProgressBar } from './ProgressBar';
+import { ProgressBar } from './BookingWizard';
 import { ServiceTypeSelection } from './ServiceTypeSelection';
 import { ProviderSelection } from './ProviderSelection';
 import { DateTimeSelection } from './DateTimeSelection';
