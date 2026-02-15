@@ -1,0 +1,7 @@
+{
+  "name": "Arya Hospital Portal 2.0",
+  "description": "An advanced AI-powered patient portal for Arya Hospital featuring smart scheduling, medical record tracking, and a 24/7 AI health assistant.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
