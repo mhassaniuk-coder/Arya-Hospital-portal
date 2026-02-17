@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   LayoutDashboard, Calendar, FileText, MessageSquare, Clock, Bell, Settings,
   Menu, X, LogOut, Search, User as UserIcon, ChevronRight, Lock,
-  Pill, Heart, Shield, ShieldCheck, ShieldAlert, Users, Activity, Video, Stethoscope, DollarSign, HeartHandshake, Smile, CreditCard
+  Pill, Heart, Shield, ShieldCheck, ShieldAlert, Users, Activity, Video, Stethoscope, DollarSign, HeartHandshake, Smile, CreditCard, History
 } from 'lucide-react';
 import { TelehealthPage } from './components/TelehealthPage';
 import { SpecialtyCare } from './components/SpecialtyCare';
