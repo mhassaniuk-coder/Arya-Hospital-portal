@@ -634,9 +634,8 @@ export const Appointments: React.FC<AppointmentsProps> = ({ appointments, onAddA
                   // If Lab/Home/Imaging, they did provider/service selection in step 2.
                   // So Step 3 is Date Selection for them?
                   // Flow needs unification.
-                  <div></div>
+                  <div>{/* Vercel Force Build 124 */}</div>
                 )
-              {/* Force Vercel Build 123 */}
               )}
 
 
