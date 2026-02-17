@@ -2,6 +2,7 @@
 export { MOCK_DOCTORS } from './doctors';
 export { MOCK_HOME_CARE, MOCK_LABS, MOCK_IMAGING } from './services';
 export { FAMILY_MEMBERS } from './family';
+export { MOCK_CLINICAL_NOTES, MOCK_VACCINATIONS, MOCK_IMAGING_REPORTS } from './history';
 export { INITIAL_INSURANCE_CARDS } from './insurance';
 export type { FamilyMember } from './family';
 

@@ -37,7 +37,10 @@ import {
   MOCK_BILLS,
   MOCK_PHARMACY_ORDERS,
   FAMILY_MEMBERS as INITIAL_FAMILY_MEMBERS,
-  INITIAL_INSURANCE_CARDS
+  INITIAL_INSURANCE_CARDS,
+  MOCK_CLINICAL_NOTES,
+  MOCK_VACCINATIONS,
+  MOCK_IMAGING_REPORTS
 } from './data/mock';
 
 type AppScreen = 'landing' | 'auth' | 'app';
@@ -163,7 +166,18 @@ function App() {
       case 'chat': return <AIChat user={currentUser} appointments={appointments} labResults={MOCK_LAB_RESULTS} medications={MOCK_MEDICATIONS} bills={MOCK_BILLS} onNavigate={(view: ViewState) => setCurrentView(view)} onAddAppointment={addAppointment} />;
       case 'appointments': return <Appointments appointments={appointments} onAddAppointment={addAppointment} familyMembers={familyMembers} />;
       case 'records': return <ReportsPage labResults={MOCK_LAB_RESULTS} />;
-      case 'history': return <HistoryPage appointments={appointments} labResults={MOCK_LAB_RESULTS} medications={MOCK_MEDICATIONS} />;
+      case 'records': return <ReportsPage labResults={MOCK_LAB_RESULTS} />;
+      case 'history': return (
+        <HistoryPage
+          appointments={appointments}
+          labResults={MOCK_LAB_RESULTS}
+          medications={MOCK_MEDICATIONS}
+          clinicalNotes={MOCK_CLINICAL_NOTES}
+          vaccinations={MOCK_VACCINATIONS}
+          imagingReports={MOCK_IMAGING_REPORTS}
+        />
+      );
+      case 'notifications': return <NotificationsPage onNavigate={(view) => setCurrentView(view)} />;
       case 'notifications': return <NotificationsPage onNavigate={(view) => setCurrentView(view)} />;
       case 'settings': return <SettingsPage user={currentUser} onSignOut={() => setScreen('landing')} />;
       case 'pharmacy': return <Pharmacy medications={medications} orders={pharmacyOrders} onAddMedication={addMedication} onUpdateMedication={updateMedication} onDeleteMedication={deleteMedication} onRequestRefill={handleRefillRequest} />;
