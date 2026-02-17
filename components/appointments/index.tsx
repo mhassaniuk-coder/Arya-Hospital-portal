@@ -637,7 +637,7 @@ export const Appointments: React.FC<AppointmentsProps> = ({ appointments, onAddA
                   <div></div>
                 )
               )}
-              )}
+
 
               {step === 4 && (
                 <div>
