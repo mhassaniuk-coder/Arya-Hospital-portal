@@ -11,6 +11,7 @@ import { SpecialtyCare } from './components/SpecialtyCare';
 import { FinancialPage } from './components/FinancialPage';
 import { EngagementPage } from './components/EngagementPage';
 import { Dashboard } from './components/Dashboard';
+import { Sidebar } from './components/Sidebar';
 import { AIChat } from './components/AIChat';
 import { Appointments } from './components/appointments';
 import { ReportsPage } from './components/ReportsPage';
@@ -45,6 +46,7 @@ function App() {
   const [screen, setScreen] = useState<AppScreen>('landing');
   const [currentUser, setCurrentUser] = useState<User>(MOCK_USER);
   const [currentView, setCurrentView] = useState<ViewState>('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [appointments, setAppointments] = useState<Appointment[]>(INITIAL_APPOINTMENTS);
@@ -181,7 +183,7 @@ function App() {
   const NavItem = ({ view, icon: Icon, label }: { view: ViewState, icon: any, label: string }) => (
     <button
       onClick={() => { setCurrentView(view); setIsMobileMenuOpen(false); }}
-      className={`w - full flex items - center space - x - 3 px - 4 py - 2.5 rounded - xl transition - all duration - 200 ${currentView === view ? 'bg-arya-600 text-white shadow-lg shadow-arya-200 font-medium' : 'text-slate-500 hover:bg-arya-50 hover:text-arya-600'} `}
+      className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${currentView === view ? 'bg-arya-600 text-white shadow-lg shadow-arya-200 font-medium' : 'text-slate-500 hover:bg-arya-50 hover:text-arya-600'} `}
     >
       <div className="relative"><Icon size={18} />{!currentUser.isVerified && isRestricted(view) && <div className="absolute -top-1 -right-2 bg-slate-100 rounded-full p-0.5 border border-white"><Lock size={8} className="text-slate-400" /></div>}</div>
       <span className="text-sm">{label}</span>
@@ -192,40 +194,15 @@ function App() {
     <div className="h-[100dvh] w-screen bg-gray-50 flex flex-col md:flex-row font-sans text-slate-800 overflow-hidden">
       {showVerificationModal && <VerificationModal onComplete={handleVerificationComplete} onClose={() => setShowVerificationModal(false)} />}
 
-      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-100 h-full shrink-0 z-30 overflow-y-auto">
-        <div className="p-6">
-          <div className="flex items-center space-x-2 mb-8">
-            <img src="/logo.jpg" alt="Arya Hospital" className="w-10 h-10 object-contain rounded-lg" />
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-arya-700 to-arya-500">Arya Hospital</span>
-          </div>
-          <nav className="space-y-1">
-            <NavItem view="dashboard" icon={LayoutDashboard} label="Dashboard" />
-            <NavItem view="chat" icon={MessageSquare} label="AI Assistant" />
-            <NavItem view="symptom_checker" icon={Activity} label="Symptom Checker" />
-            <NavItem view="appointments" icon={Calendar} label="Appointments" />
-            <NavItem view="pharmacy" icon={Pill} label="Pharmacy" />
-            <NavItem view="records" icon={FileText} label="Records" />
-            <NavItem view="telehealth" icon={Video} label="Telehealth & Emergency" />
-            <NavItem view="history" icon={History} label="History" />
-            <div className="pt-4 pb-2 text-xs font-bold text-slate-400 uppercase px-4">Lifestyle</div>
-            <NavItem view="wellness" icon={Heart} label="Wellness" />
-            <NavItem view="specialty_care" icon={Heart} label="Specialty Care" />
-            <NavItem view="financial" icon={DollarSign} label="Financial" />
-            <NavItem view="engagement" icon={HeartHandshake} label="Engagement" />
-            <NavItem view="family" icon={Users} label="Family" />
-            <NavItem view="insurance" icon={CreditCard} label="Insurance" />
-          </nav>
-        </div>
-        <div className="mt-auto p-6 border-t border-slate-100">
-          <div className="flex items-center space-x-3 mb-4 cursor-pointer hover:bg-slate-50 p-2 rounded-xl" onClick={() => setCurrentView('settings')}>
-            <img src={currentUser.avatarUrl} alt="User" className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
-            <div className="overflow-hidden">
-              <p className="text-sm font-bold text-slate-800 truncate">{currentUser.name}</p>
-              <p className="text-xs text-slate-400 truncate">{currentUser.isVerified ? 'Verified' : 'Unverified'}</p>
-            </div>
-          </div>
-        </div>
-      </aside>
+      <Sidebar
+        currentUser={currentUser}
+        currentView={currentView}
+        setCurrentView={setCurrentView}
+        isRestricted={isRestricted}
+        onSignOut={() => setScreen('landing')}
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+      />
 
       <div className="flex-1 flex flex-col h-full overflow-hidden relative w-full">
         <div className="md:hidden h-16 bg-white/90 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-4 shrink-0 z-20">
