@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LayoutDashboard, ArrowRight, Lock, User, Mail, Shield, 
-  CheckCircle, Activity, Heart, Calendar, MessageSquare, 
+import {
+  LayoutDashboard, ArrowRight, Lock, User, Mail, Shield,
+  CheckCircle, Activity, Heart, Calendar, MessageSquare,
   Stethoscope, Brain, Sparkles, Star, ChevronRight,
   Phone, MapPin, Clock, Users, Zap, ShieldCheck
 } from 'lucide-react';
@@ -96,12 +96,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
               className="flex items-center gap-2"
               whileHover={{ scale: 1.02 }}
             >
-              <div className="bg-arya-600 p-2 rounded-xl">
-                <LayoutDashboard className="text-white" size={24} />
+              <div className="flex items-center gap-2">
+                <img src="/logo.jpg" alt="Arya Hospital" className="w-10 h-10 object-contain rounded-xl shadow-sm" />
+                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-arya-700 to-arya-500">
+                  Arya Hospital
+                </span>
               </div>
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-arya-700 to-arya-500">
-                Arya
-              </span>
             </motion.div>
 
             <div className="hidden md:flex items-center gap-8">
@@ -164,7 +164,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
                 variants={fadeInUp}
                 className="text-lg text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0"
               >
-                Experience the future of healthcare management with AI-powered assistance, 
+                Experience the future of healthcare management with AI-powered assistance,
                 smart scheduling, and comprehensive health tracking — all in one beautiful platform.
               </motion.p>
 
@@ -231,7 +231,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
                           <div className="w-6 h-3 bg-green-500 rounded-sm" />
                         </div>
                       </div>
-                      
+
                       {/* App Content */}
                       <div className="p-4 space-y-4">
                         <div className="flex items-center gap-3">
@@ -329,11 +329,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                className={`relative bg-white rounded-2xl p-6 shadow-sm border-2 transition-all cursor-pointer ${
-                  activeFeature === index 
-                    ? 'border-arya-500 shadow-lg shadow-arya-100' 
-                    : 'border-slate-100 hover:border-slate-200'
-                }`}
+                className={`relative bg-white rounded-2xl p-6 shadow-sm border-2 transition-all cursor-pointer ${activeFeature === index
+                  ? 'border-arya-500 shadow-lg shadow-arya-100'
+                  : 'border-slate-100 hover:border-slate-200'
+                  }`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -341,16 +340,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
                 whileHover={{ y: -5 }}
                 onClick={() => setActiveFeature(index)}
               >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
-                  activeFeature === index 
-                    ? 'bg-arya-500 text-white' 
-                    : 'bg-arya-50 text-arya-600'
-                }`}>
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${activeFeature === index
+                  ? 'bg-arya-500 text-white'
+                  : 'bg-arya-50 text-arya-600'
+                  }`}>
                   {feature.icon}
                 </div>
                 <h3 className="font-bold text-slate-800 mb-2">{feature.title}</h3>
                 <p className="text-sm text-slate-500">{feature.description}</p>
-                
+
                 {activeFeature === index && (
                   <motion.div
                     className="absolute top-4 right-4"
@@ -431,7 +429,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
           <div className="absolute inset-0 opacity-10">
             <ParticlesBackground />
           </div>
-          
+
           <div className="relative z-10">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Ready to Transform Your Healthcare Experience?
@@ -466,16 +464,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="bg-arya-600 p-2 rounded-xl">
-                  <LayoutDashboard className="text-white" size={24} />
-                </div>
-                <span className="text-xl font-bold">Arya</span>
+                <img src="/logo.jpg" alt="Arya Hospital" className="w-8 h-8 object-contain bg-white rounded-lg" />
+                <span className="text-xl font-bold">Arya Hospital</span>
               </div>
               <p className="text-slate-400 text-sm">
                 AI-powered healthcare platform for the modern patient.
               </p>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-slate-400">
@@ -485,7 +481,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
                 <li><a href="#" className="hover:text-white transition-colors">Enterprise</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-slate-400">
@@ -495,7 +491,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
                 <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-sm text-slate-400">
@@ -506,9 +502,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-slate-800 pt-8 text-center text-sm text-slate-400">
-            <p>© 2024 Arya Healthcare. All rights reserved.</p>
+            <p>© 2024 Arya Hospital. All rights reserved.</p>
           </div>
         </div>
       </footer>

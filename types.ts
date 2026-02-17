@@ -20,7 +20,7 @@ export interface Appointment {
   matchScore?: number; // 0-100
   travelTime?: string;
   prepInstructions?: string[];
-  smartTags?: string[]; 
+  smartTags?: string[];
   visitType?: 'in-person' | 'video' | 'home-visit';
   patientName?: string;
   patientId?: string;
@@ -46,6 +46,17 @@ export interface Medication {
   datePrescribed?: string;
   status: 'active' | 'completed';
   nextRefill?: string;
+  instructions?: string;
+}
+
+export interface PharmacyOrder {
+  id: string;
+  medicationId: string;
+  medicationName: string;
+  status: 'processing' | 'shipped' | 'out_for_delivery' | 'delivered';
+  estimatedDelivery?: string;
+  trackingMessage?: string;
+  createdAt: string;
 }
 
 export interface Bill {
@@ -64,19 +75,24 @@ export interface ChatMessage {
   isStreaming?: boolean;
 }
 
-export type ViewState = 
-  | 'dashboard' 
-  | 'appointments' 
-  | 'records' 
-  | 'chat' 
-  | 'history' 
-  | 'notifications' 
+export type ViewState =
+  | 'dashboard'
+  | 'appointments'
+  | 'records'
+  | 'chat'
+  | 'history'
+  | 'notifications'
   | 'settings'
   | 'pharmacy'      // New
   | 'wellness'      // New
   | 'insurance'     // New
   | 'family'        // New
-  | 'symptom_checker'; // New
+  | 'family'        // New
+  | 'symptom_checker' // New
+  | 'telehealth'    // New
+  | 'specialty_care' // New
+  | 'financial'     // New
+  | 'engagement';   // New
 
 export interface NotificationItem {
   id: string;
@@ -107,16 +123,16 @@ export interface Doctor {
   experienceYears: number;
   bio: string;
   nextAvailable: string;
-  tags: string[]; 
+  tags: string[];
 }
 
 export interface SmartSlot {
   id: string;
   time: string;
   date: string;
-  dateIso: string; 
-  score: number; 
-  tags: string[]; 
+  dateIso: string;
+  score: number;
+  tags: string[];
   type: 'in-person' | 'video' | 'home-visit';
 }
 
@@ -127,7 +143,7 @@ export interface AIAnalysisResult {
   suggestedDoctorType: string;
   prepTips: string[];
   questionsToAsk: string[];
-  telehealthScore: number; 
+  telehealthScore: number;
   estimatedDuration: string;
 }
 
@@ -156,4 +172,47 @@ export interface InsuranceClaim {
   service: string;
   amount: number;
   status: 'approved' | 'pending' | 'denied';
+}
+
+export interface InsuranceCard {
+  id: string;
+  provider: string;
+  memberId: string;
+  groupNumber: string;
+  planName: string;
+  copayOffice: number;
+  copaySpecialist: number;
+  deductible: number;
+}
+
+export interface ImagingReport {
+  id: string;
+  modality: 'X-Ray' | 'MRI' | 'CT' | 'Ultrasound';
+  bodyPart: string;
+  date: string;
+  status: 'Normal' | 'Abnormal' | 'Pending';
+  imageUrl: string;
+  reportUrl?: string; // PDF link
+  radiologist: string;
+  findings: string;
+}
+
+export interface Vaccination {
+  id: string;
+  vaccineName: string;
+  dateGiven: string;
+  dueDate?: string;
+  status: 'Completed' | 'Due' | 'Overdue';
+  batchNumber?: string;
+  provider: string;
+}
+
+export interface ClinicalNote {
+  id: string;
+  date: string;
+  type: 'Consultation' | 'Discharge Summary' | 'Operative Report';
+  doctorName: string;
+  specialty: string;
+  summary: string;
+  fileUrl?: string;
 }

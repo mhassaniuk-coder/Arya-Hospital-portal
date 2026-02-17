@@ -1,8 +1,7 @@
 import React from 'react';
 import { CheckCircle, Calendar, Bell, Stethoscope, Home, TestTube, Scan } from 'lucide-react';
-import { Doctor, ServiceItem } from '../../types';
+import { Doctor, ServiceItem, FamilyMember } from '../../types';
 import { ServiceType } from './types';
-import { FAMILY_MEMBERS } from '../../data/mock';
 
 interface BookingConfirmationProps {
   selectedServiceType: ServiceType;
@@ -11,6 +10,7 @@ interface BookingConfirmationProps {
   selectedDate: string;
   selectedSlot: { time: string } | null;
   selectedFamilyMemberId: string;
+  familyMembers: FamilyMember[];
   onClose: () => void;
 }
 
@@ -21,9 +21,10 @@ export const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   selectedDate,
   selectedSlot,
   selectedFamilyMemberId,
+  familyMembers,
   onClose,
 }) => {
-  const selectedFamilyMember = FAMILY_MEMBERS.find(m => m.id === selectedFamilyMemberId);
+  const selectedFamilyMember = familyMembers.find(m => m.id === selectedFamilyMemberId);
   const confirmationNumber = `ARY-${Date.now().toString().slice(-6)}`;
 
   const getServiceIcon = () => {
@@ -42,10 +43,10 @@ export const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
         <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle size={48} className="text-green-500" />
         </div>
-        
+
         <h2 className="text-2xl font-bold text-slate-800 mb-2">Booking Confirmed!</h2>
         <p className="text-slate-500 mb-6">Your appointment has been successfully scheduled.</p>
-        
+
         {/* Appointment Details Card */}
         <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 text-left space-y-4 mb-6">
           <div className="flex items-center gap-3">
@@ -57,7 +58,7 @@ export const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
               <p className="text-sm text-slate-500">{selectedDoctor?.specialty || selectedService?.description}</p>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
             <div>
               <p className="text-xs text-slate-400 uppercase font-semibold">Date</p>
@@ -79,7 +80,7 @@ export const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
             </div>
           </div>
         </div>
-        
+
         {/* Action Buttons */}
         <div className="flex flex-col gap-3">
           <button className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-colors">

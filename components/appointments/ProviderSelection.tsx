@@ -13,6 +13,7 @@ interface ProviderSelectionProps {
   onUpdateFilters: (filters: ManualFilters) => void;
   onSelectDoctor: (doctor: Doctor | null) => void;
   onSelectService: (service: ServiceItem | null) => void;
+  appointmentType?: 'video' | 'in-person';
 }
 
 export const ProviderSelection: React.FC<ProviderSelectionProps> = ({
@@ -23,12 +24,13 @@ export const ProviderSelection: React.FC<ProviderSelectionProps> = ({
   onUpdateFilters,
   onSelectDoctor,
   onSelectService,
+  appointmentType,
 }) => {
   // Filter doctors based on criteria
   const getFilteredDoctors = (): Doctor[] => {
     return MOCK_DOCTORS.filter(doc => {
-      const matchSearch = doc.name.toLowerCase().includes(manualFilters.search.toLowerCase()) || 
-                          doc.specialty.toLowerCase().includes(manualFilters.search.toLowerCase());
+      const matchSearch = doc.name.toLowerCase().includes(manualFilters.search.toLowerCase()) ||
+        doc.specialty.toLowerCase().includes(manualFilters.search.toLowerCase());
       const matchSpec = manualFilters.specialty === 'All' || doc.specialty === manualFilters.specialty;
       const matchGender = manualFilters.gender === 'All' || doc.gender === manualFilters.gender;
       const matchLang = manualFilters.language === 'All' || doc.languages.includes(manualFilters.language);
@@ -41,11 +43,10 @@ export const ProviderSelection: React.FC<ProviderSelectionProps> = ({
     <button
       key={doctor.id}
       onClick={() => onSelectDoctor(doctor)}
-      className={`w-full p-4 rounded-2xl border-2 transition-all text-left ${
-        selectedDoctor?.id === doctor.id
-          ? 'border-arya-500 bg-arya-50 shadow-lg'
-          : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
-      }`}
+      className={`w-full p-4 rounded-2xl border-2 transition-all text-left ${selectedDoctor?.id === doctor.id
+        ? 'border-arya-500 bg-arya-50 shadow-lg'
+        : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
+        }`}
     >
       <div className="flex gap-4">
         <img src={doctor.image} alt={doctor.name} className="w-16 h-16 rounded-xl object-cover" />
@@ -91,11 +92,10 @@ export const ProviderSelection: React.FC<ProviderSelectionProps> = ({
     <button
       key={service.id}
       onClick={() => onSelectService(service)}
-      className={`w-full p-4 rounded-2xl border-2 transition-all text-left ${
-        selectedService?.id === service.id
-          ? 'border-arya-500 bg-arya-50 shadow-lg'
-          : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
-      }`}
+      className={`w-full p-4 rounded-2xl border-2 transition-all text-left ${selectedService?.id === service.id
+        ? 'border-arya-500 bg-arya-50 shadow-lg'
+        : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
+        }`}
     >
       <div className="flex justify-between items-start">
         <div>
@@ -131,13 +131,13 @@ export const ProviderSelection: React.FC<ProviderSelectionProps> = ({
               type="text"
               placeholder="Search doctors by name or specialty..."
               value={manualFilters.search}
-              onChange={(e) => onUpdateFilters({...manualFilters, search: e.target.value})}
+              onChange={(e) => onUpdateFilters({ ...manualFilters, search: e.target.value })}
               className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-arya-200 outline-none"
             />
           </div>
           <select
             value={manualFilters.specialty}
-            onChange={(e) => onUpdateFilters({...manualFilters, specialty: e.target.value})}
+            onChange={(e) => onUpdateFilters({ ...manualFilters, specialty: e.target.value })}
             className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-arya-200 outline-none text-slate-600"
             title="Filter by specialty"
           >
@@ -146,7 +146,7 @@ export const ProviderSelection: React.FC<ProviderSelectionProps> = ({
             ))}
           </select>
         </div>
-        
+
         {/* Doctor Cards */}
         <div className="space-y-4">
           {getFilteredDoctors().length > 0 ? (
@@ -164,8 +164,8 @@ export const ProviderSelection: React.FC<ProviderSelectionProps> = ({
 
   // Service modes - show services
   const services = bookingMode === 'home-care' ? MOCK_HOME_CARE :
-                   bookingMode === 'lab' ? MOCK_LABS :
-                   MOCK_IMAGING;
+    bookingMode === 'lab' ? MOCK_LABS :
+      MOCK_IMAGING;
 
   return (
     <div className="p-6 md:p-8 space-y-6 animate-fade-in">

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LayoutDashboard, ArrowRight, Lock, User, Mail, Shield, 
-  CheckCircle, Activity, Heart, Calendar, MessageSquare, 
+import {
+  LayoutDashboard, ArrowRight, Lock, User, Mail, Shield,
+  CheckCircle, Activity, Heart, Calendar, MessageSquare,
   Eye, EyeOff, Sparkles, Phone, Fingerprint, Brain
 } from 'lucide-react';
 import { fadeInUp, staggerContainer, scaleIn, slideInFromLeft, slideInFromRight } from '../utils/animations';
@@ -78,13 +78,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
           >
             <div className="flex items-center gap-3 mb-8">
               <motion.div
-                className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl"
+                className="bg-white/20 backdrop-blur-sm p-2 rounded-2xl"
                 animate={{ rotate: [0, 5, 0, -5, 0] }}
                 transition={{ duration: 5, repeat: Infinity }}
               >
-                <LayoutDashboard className="text-white" size={32} />
+                <img src="/logo.jpg" alt="Arya Hospital" className="w-12 h-12 object-contain rounded-xl" />
               </motion.div>
-              <span className="text-3xl font-bold text-white">Arya</span>
+              <span className="text-3xl font-bold text-white">Arya Hospital</span>
             </div>
 
             <h1 className="text-4xl xl:text-5xl font-bold text-white mb-6 leading-tight">
@@ -93,7 +93,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
             </h1>
 
             <p className="text-lg text-arya-100 mb-10 max-w-md">
-              Experience the future of healthcare with AI-powered assistance, 
+              Experience the future of healthcare with AI-powered assistance,
               smart scheduling, and comprehensive health management.
             </p>
 
@@ -156,10 +156,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
       >
         {/* Mobile Logo */}
         <div className="lg:hidden absolute top-6 left-6 flex items-center gap-2">
-          <div className="bg-arya-600 p-2 rounded-xl">
-            <LayoutDashboard className="text-white" size={20} />
-          </div>
-          <span className="text-xl font-bold text-slate-800">Arya</span>
+          <img src="/logo.jpg" alt="Arya Hospital" className="w-8 h-8 object-contain rounded-lg" />
+          <span className="text-xl font-bold text-slate-800">Arya Hospital</span>
         </div>
 
         <div className="w-full max-w-md">
@@ -180,7 +178,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
                 <Sparkles size={14} />
                 <span>Secure Access</span>
               </motion.div>
-              
+
               <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">
                 {mode === 'signin' && 'Welcome Back'}
                 {mode === 'signup' && 'Create Account'}
@@ -338,11 +336,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
                   {/* Submit Button */}
                   <AnimatedButton
                     type="submit"
-                    className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 ${
-                      isLoading 
-                        ? 'bg-slate-400 cursor-not-allowed' 
+                    className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 ${isLoading
+                        ? 'bg-slate-400 cursor-not-allowed'
                         : 'bg-arya-600 hover:bg-arya-700 text-white shadow-lg shadow-arya-200'
-                    }`}
+                      }`}
                     disabled={isLoading}
                   >
                     {isLoading ? (

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Stethoscope, Home, TestTube, Scan, CheckCircle, Users, Baby } from 'lucide-react';
 import { ServiceType } from './types';
-import { FAMILY_MEMBERS } from '../../data/mock';
+import { FamilyMember } from '../../types';
 
 interface ServiceTypeSelectionProps {
   selectedServiceType: ServiceType;
   selectedFamilyMemberId: string;
+  familyMembers: FamilyMember[];
   onSelectServiceType: (type: ServiceType) => void;
   onSelectBookingMode: (mode: 'manual' | 'home-care' | 'lab' | 'imaging') => void;
   onSelectFamilyMember: (id: string) => void;
@@ -14,6 +15,7 @@ interface ServiceTypeSelectionProps {
 export const ServiceTypeSelection: React.FC<ServiceTypeSelectionProps> = ({
   selectedServiceType,
   selectedFamilyMemberId,
+  familyMembers,
   onSelectServiceType,
   onSelectBookingMode,
   onSelectFamilyMember,
@@ -28,37 +30,37 @@ export const ServiceTypeSelection: React.FC<ServiceTypeSelectionProps> = ({
   };
 
   const serviceTypes: { type: ServiceType; icon: React.ReactNode; title: string; description: string; price: string; badge: string; badgeColor: string }[] = [
-    { 
-      type: 'consultation', 
-      icon: <Stethoscope size={28} />, 
-      title: 'Consultation', 
+    {
+      type: 'consultation',
+      icon: <Stethoscope size={28} />,
+      title: 'Consultation',
       description: 'Video or in-person visit with a doctor',
       price: 'From $50',
       badge: 'Video Available',
       badgeColor: 'bg-blue-100 text-blue-700'
     },
-    { 
-      type: 'home-care', 
-      icon: <Home size={28} />, 
-      title: 'Home Care', 
+    {
+      type: 'home-care',
+      icon: <Home size={28} />,
+      title: 'Home Care',
       description: 'Professional healthcare at your doorstep',
       price: 'From $40',
       badge: 'At Home',
       badgeColor: 'bg-purple-100 text-purple-700'
     },
-    { 
-      type: 'lab', 
-      icon: <TestTube size={28} />, 
-      title: 'Lab Tests', 
+    {
+      type: 'lab',
+      icon: <TestTube size={28} />,
+      title: 'Lab Tests',
       description: 'Blood work, diagnostics, and screenings',
       price: 'From $25',
       badge: 'Fast Results',
       badgeColor: 'bg-orange-100 text-orange-700'
     },
-    { 
-      type: 'imaging', 
-      icon: <Scan size={28} />, 
-      title: 'Imaging', 
+    {
+      type: 'imaging',
+      icon: <Scan size={28} />,
+      title: 'Imaging',
       description: 'X-rays, MRI, CT scans, and ultrasounds',
       price: 'From $50',
       badge: 'Advanced',
@@ -75,25 +77,25 @@ export const ServiceTypeSelection: React.FC<ServiceTypeSelectionProps> = ({
           Booking for
         </label>
         <div className="flex flex-wrap gap-2">
-          {FAMILY_MEMBERS.map(member => (
+          {familyMembers.map(member => (
             <button
               key={member.id}
               onClick={() => onSelectFamilyMember(member.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 transition-all ${
-                selectedFamilyMemberId === member.id
-                  ? 'border-arya-500 bg-arya-50 text-arya-700'
-                  : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
-              }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 transition-all ${selectedFamilyMemberId === member.id
+                ? 'border-arya-500 bg-arya-50 text-arya-700'
+                : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                }`}
             >
               <img src={member.avatar} alt={member.name} className="w-6 h-6 rounded-full object-cover" />
               <span className="font-medium text-sm">{member.name}</span>
               <span className="text-xs text-slate-400">({member.relation})</span>
-              {member.isChild && <Baby size={12} className="text-pink-500" />}
+              {/* member.isChild is not on FamilyMember type, infer from age or relation */}
+              {member.age < 18 && <Baby size={12} className="text-pink-500" />}
             </button>
           ))}
         </div>
       </div>
-      
+
       {/* Service Type Cards */}
       <div>
         <h3 className="text-sm font-semibold text-slate-700 mb-4">Select Service Type</h3>
@@ -102,17 +104,15 @@ export const ServiceTypeSelection: React.FC<ServiceTypeSelectionProps> = ({
             <button
               key={type}
               onClick={() => handleServiceSelect(type)}
-              className={`group relative p-6 rounded-2xl border-2 transition-all text-left ${
-                selectedServiceType === type
-                  ? 'border-arya-500 bg-arya-50 shadow-lg shadow-arya-100'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
-              }`}
+              className={`group relative p-6 rounded-2xl border-2 transition-all text-left ${selectedServiceType === type
+                ? 'border-arya-500 bg-arya-50 shadow-lg shadow-arya-100'
+                : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
+                }`}
             >
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
-                selectedServiceType === type 
-                  ? 'bg-arya-500 text-white' 
-                  : 'bg-slate-100 text-slate-500'
-              }`}>
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${selectedServiceType === type
+                ? 'bg-arya-500 text-white'
+                : 'bg-slate-100 text-slate-500'
+                }`}>
                 {icon}
               </div>
               <h4 className="font-bold text-slate-800 text-lg mb-1">{title}</h4>

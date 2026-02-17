@@ -2,17 +2,18 @@
 export { MOCK_DOCTORS } from './doctors';
 export { MOCK_HOME_CARE, MOCK_LABS, MOCK_IMAGING } from './services';
 export { FAMILY_MEMBERS } from './family';
+export { INITIAL_INSURANCE_CARDS } from './insurance';
 export type { FamilyMember } from './family';
 
 // User and Appointments mock data
-import { User, Appointment, LabResult, Medication, Bill } from '../../types';
+import { User, Appointment, LabResult, Medication, Bill, PharmacyOrder } from '../../types';
 
 export const MOCK_USER: User = {
   id: 'u1',
   name: 'Sarah Jenkins',
   avatarUrl: 'https://picsum.photos/200',
   mrn: 'MRN-882910',
-  isVerified: false 
+  isVerified: false
 };
 
 export const INITIAL_APPOINTMENTS: Appointment[] = [
@@ -59,4 +60,8 @@ export const MOCK_MEDICATIONS: Medication[] = [
 
 export const MOCK_BILLS: Bill[] = [
   { id: 'b1', amount: 45.00, description: 'Lab Work Co-pay', date: '2023-10-21', status: 'unpaid' },
+];
+
+export const MOCK_PHARMACY_ORDERS: PharmacyOrder[] = [
+  { id: 'o1', medicationId: 'm1', medicationName: 'Lipitor (20mg)', status: 'out_for_delivery', estimatedDelivery: 'Today by 6:00 PM', trackingMessage: 'Your package is arriving today by 6:00 PM.', createdAt: '2023-11-01' },
 ];
